@@ -6,18 +6,18 @@ require 'dedup/version'
 Gem::Specification.new do |spec|
   spec.name          = "dedup"
   spec.version       = Dedupable::VERSION
-  spec.authors       = ["menghuanwd"]
+  spec.authors       = ["li-thy-um"]
   spec.email         = ["651019063@qq.com"]
 
   spec.summary       = "dedup"
   spec.description   = "dedup"
-  spec.homepage      = "dedup"
+  spec.homepage      = "https://github.com/menghuanwd/dedup"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "https://weqew.com"
+    spec.metadata['allowed_push_host'] = "https://rubygems.org"
   else
     raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   end
