@@ -62,7 +62,7 @@ module Dedup
       # 一次查询分数都超过了分数线则扩大范围再查一次
       def query_results(size)
         results = @__searcher__.search(per: size, &@dedup_algorithm.method(:setup_elasticsearch_query)).results
-        @dedup_algorithm.enough?(results) or query_results(size + 10)
+        @dedup_algorithm.enough?(results, size) or query_results(size + 10)
       end
     end
   end

@@ -19,8 +19,11 @@ class Dedup::Algorithm
     searcher.must :range, origin_date: {gt: @data[:origin_date] - @origin_date_from_ago, lte: @data[:origin_date]}
   end
 
-  def enough?(results)
-    results.blank? || results[-1]._score < @score_lower_bound || results.size >= @max_query_terms and results
+  def enough?(results, size)
+    results.blank?                           ||
+    results < size                           ||
+    results[-1]._score <  @score_lower_bound ||
+    results.size       >= @max_query_terms   and results
   end
 
   def report(result)
