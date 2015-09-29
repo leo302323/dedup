@@ -24,7 +24,7 @@ class Dedup::Algorithm
 
   def enough?(results, size)
     results.blank?                           ||
-    results.size       < size                ||
+    results.size       <  size               ||
     results[-1]._score <  @score_lower_bound ||
     results.size       >= @max_query_terms   and results
   end
