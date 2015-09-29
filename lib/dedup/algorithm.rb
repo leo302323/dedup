@@ -1,5 +1,4 @@
 class Dedup::Algorithm
-
   def initialize(data, attributes={})
     @max_query_terms          = attributes[:max_query_terms]          || 200
     @score_lower_bound        = attributes[:score_lower_bound]        || 130
@@ -12,12 +11,12 @@ class Dedup::Algorithm
 
   def setup_elasticsearch_query(searcher)
     searcher.should :more_like_this_field, content: {
-      like_text:       content_text,
+      like_text:       text_of(@data[:content]),
       max_query_terms: @max_query_terms,
       min_term_freq:   1
     }
     searcher.must_not :term, id: @data[:id].to_s
-    searcher.must :range, origin_date: {gte: @data[:origin_date] - @origin_date_from_ago, lt: @data[:origin_date]}
+    searcher.must :range, origin_date: {gt: @data[:origin_date] - @origin_date_from_ago, lte: @data[:origin_date]}
   end
 
   def enough?(results)
@@ -27,8 +26,8 @@ class Dedup::Algorithm
   def report(result)
     { id:           result._id,
       score:        result._score,
-      size_diff:    size_diff(result.content, content_text),
-      phrases_diff: phrases_diff(result.content, content_text)
+      size_diff:    size_diff(text_of(result.content), text_of(@data[:content])),
+      phrases_diff: phrases_diff(text_of(result.content), text_of(@date[:content]))
     }
   end
 
@@ -40,8 +39,8 @@ class Dedup::Algorithm
 
 private
 
-  def content_text
-    @content_text ||= Nokogiri::HTML(@data[:content]).content
+  def text_of(content)
+    Nokogiri::HTML(content).content.gsub(/[\s\u200d\u00a0\u3000]/, '')
   end
 
   # 计算两篇文章的长度差异率
