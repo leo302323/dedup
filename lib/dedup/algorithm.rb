@@ -15,11 +15,11 @@ class Dedup::Algorithm
       max_query_terms: @max_query_terms,
       min_term_freq:   1
     }
-    searcher.must_not :term, id: @data[:id].to_s
     searcher.must :range, origin_date: {
       gt:  @data[:origin_date] - @origin_date_from_ago,
       lte: @data[:origin_date]
     }
+    searcher.must_not :term, id: @data[:id].to_s
   end
 
   def enough?(results, size)
@@ -33,7 +33,7 @@ class Dedup::Algorithm
     { id:           result._id,
       score:        result._score,
       size_diff:    size_diff(text_of(result.content), text_of(@data[:content])),
-      phrases_diff: phrases_diff(text_of(result.content), text_of(@date[:content]))
+      phrases_diff: phrases_diff(text_of(result.content), text_of(@data[:content]))
     }
   end
 
