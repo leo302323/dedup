@@ -64,6 +64,10 @@ module Dedup
         @sort = {}
         @source = true
       end
+
+    private
+
+      attr_reader :should_filters, :must_filters, :must_not_filters
     end
   end
 end
