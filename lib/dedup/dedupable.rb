@@ -13,29 +13,8 @@ module Dedup
         # 根据参数使用 batch 算法查询文章的重复报告
         def duplication_reports(params, &block)
           params = {origin_date: Time.zone.now}.merge(params)
-          reports = self.new(params).duplication_reports(:batch, &block)
-          report_ids = reports.map { |report| report[:id] }
-          self.where(:id.in => report_ids).
-            lazy.map do |record|
-              record_id = record.id.to_s
-              { record: {id: record_id, title: record.title}, score: reports[report_ids.index(record_id)][:score] }
-            end.sort_by do |report|
-               -report[:score]
-            end
+          self.new(params).duplication_reports(:batch, &block)
         end
-      end
-
-      # 即时查询相似文章重复报告
-      def similarities(&block)
-        results = similar_results(5, &block)
-        result_ids = results.map(&:id)
-        self.class.
-          where(:id.in => result_ids).lazy.map do |record|
-            record_id = record.id.to_s
-            { record: {id: record_id, title: record.title}, score: results[result_ids.index(record_id)]._score }
-          end.sort_by do |similarity|
-             -similarity[:score]
-          end
       end
 
       # 自动去重判断是否有重复文章
