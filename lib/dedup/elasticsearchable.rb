@@ -8,6 +8,25 @@ module Dedup
           BasicSearcher.new(self)
         end
       end
+
+      class Hash
+        def contains_blank?
+          self.blank? || self.values.contains_blank?
+        end unless Hash.instance_methods.include?(:contains_blank?)
+      end
+
+      class Array
+        def contains_blank?
+          self.blank? ||
+          self.map do |value|
+            if value.respond_to? :contains_blank?
+              value.contains_blank? and break
+            else
+              value.blank? and break
+            end
+          end.nil?
+        end unless Array.instance_methods.include?(:contains_blank?)
+      end
     end
 
     class BasicSearcher
