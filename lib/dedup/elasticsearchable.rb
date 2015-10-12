@@ -9,13 +9,13 @@ module Dedup
         end
       end
 
-      class Hash
+      Hash.instance_eval do
         def contains_blank?
           self.blank? || self.values.contains_blank?
         end unless Hash.instance_methods.include?(:contains_blank?)
       end
 
-      class Array
+      Array.instance_eval do
         def contains_blank?
           self.blank? ||
           self.map do |value|
